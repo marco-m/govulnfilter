@@ -1,0 +1,26 @@
+# help output
+# (Note: SUT must use flag.FlagSet to avoid messing with flags added by package testing)
+#
+exec govulnfilter -h
+! stdout .
+cmp stderr usage.text
+
+-- usage.text --
+Usage: govulnfilter [<OPTS>] govulncheck <GOVULNCHECK-ARGS>
+
+Options:
+
+  -version
+    	Print the govulnfilter version.
+
+govulnfilter allows to ignore temporarily a vulnerability reported by govulncheck.
+
+Examples:
+
+    $ govulnfilter -init
+    Create the .govulnfilter.json configuration file.
+    Then, edit it accordingly.
+
+    $ govulnfilter govulncheck ./...
+    Scan the current module. Normally this is all you need.
+    The govulnfilter program will add '-format json' to the govulncheck invocation.
