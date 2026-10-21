@@ -1,26 +1,39 @@
-# help output
-# (Note: SUT must use flag.FlagSet to avoid messing with flags added by package testing)
-#
+# => help output
 exec govulnfilter -h
 ! stdout .
 cmp stderr usage.text
 
+# => missing command (this comes from marco-m/clim actually)
+! exec govulnfilter
+! stdout .
+stderr 'expected a command'
+
+# => version
+# ONLY testing that it exits 0 and prints anything to stderr :-/
+exec govulnfilter version
+! stdout .
+stderr .
+
 -- usage.text --
-Usage: govulnfilter [<OPTS>] govulncheck <GOVULNCHECK-ARGS>
+govulnfilter -- ignore temporarily a govulncheck vulnerability
 
-Options:
-
-  -version
-    	Print the govulnfilter version.
-
-govulnfilter allows to ignore temporarily a vulnerability reported by govulncheck.
+Usage: govulnfilter <command> [options]
 
 Examples:
 
-    $ govulnfilter -init
-    Create the .govulnfilter.json configuration file.
-    Then, edit it accordingly.
+ $ govulnfilter init
+ Create the .govulnfilter.json configuration file.
+ Then, edit it accordingly.
 
-    $ govulnfilter govulncheck ./...
-    Scan the current module. Normally this is all you need.
-    The govulnfilter program will add '-format json' to the govulncheck invocation.
+ $ govulnfilter run ./...
+ Invoke govulncheck to scan the current module. Normally this is all you need.
+
+Commands:
+
+ init        Create the .govulnfilter.json configuration file
+ version     Print the govulnfilter version
+
+Options:
+
+ -h, --help    Print this help and exit
+

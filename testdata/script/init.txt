@@ -1,0 +1,28 @@
+# => configuration file non existing, creating it
+exec govulnfilter init
+stdout 'Created configuration file .+\.govulnfilter\.json'
+! stderr .
+cmp .govulnfilter.json want.json
+
+# => configuration file already existing
+mv foo.json .govulnfilter.json
+! exec govulnfilter init
+! stdout .
+stderr 'init: configuration file already exists: .+\.govulnfilter\.json'
+
+-- foo.json --
+{}
+-- want.json --
+{
+    "description": "Configuration file for govulnfilter",
+    "schema_version": "devel",
+    "project": "Replace with your project name",
+    "delays": [
+        {
+            "osv": "GO-2026-4736",
+            "summary": "Optional, should come from govulncheck output",
+            "expiration": "2026-11-20T00:00:00+01:00",
+            "reason": "Reason for delaying this vulnerability"
+        }
+    ]
+}

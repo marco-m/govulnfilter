@@ -1,40 +1,38 @@
 package main
 
 import (
-	"flag"
+	"errors"
 	"fmt"
 	"os"
 	"runtime/debug"
 	"time"
+
+	"github.com/marco-m/clim"
 )
 
-const header = `Usage: govulnfilter [<OPTS>] govulncheck <GOVULNCHECK-ARGS>
+const examples = `
+$ govulnfilter init
+Create the .govulnfilter.json configuration file.
+Then, edit it accordingly.
 
-Options:
-
+$ govulnfilter run ./...
+Invoke govulncheck to scan the current module. Normally this is all you need.
 `
 
-const footer = `
-govulnfilter allows to ignore temporarily a vulnerability reported by govulncheck.
+const kFileName = ".govulnfilter.json"
 
-Examples:
+const kFormatVersion = "devel"
 
-    $ govulnfilter -init
-    Create the .govulnfilter.json configuration file.
-    Then, edit it accordingly.
-
-    $ govulnfilter govulncheck ./...
-    Scan the current module. Normally this is all you need.
-    The govulnfilter program will add '-format json' to the govulncheck invocation.
-`
-
-type Data struct {
-	DataVersion string  `json:"data_version"`
-	Delays      []Delay `json:"delays"`
+type Configuration struct {
+	Description   string  `json:"description"`
+	SchemaVersion string  `json:"schema_version"`
+	Project       string  `json:"project"`
+	Delays        []Delay `json:"delays"`
 }
 
 type Delay struct {
-	CVE        string    `json:"cve"`
+	OSV        string    `json:"osv"`
+	Summary    string    `json:"summary"`
 	Expiration time.Time `json:"expiration"`
 	Reason     string    `json:"reason"`
 }
@@ -42,37 +40,53 @@ type Delay struct {
 // Set Version at link time to workaround Go limitations with debug.ReadBuildInfo().
 var Version string
 
+// Escape hatch for testing.
+var timeNowFn = time.Now
+
 func main() {
-	if err := run(os.Args[1:]); err != nil {
+	if err := mainErr(os.Args[1:]); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-type cfg struct {
-	version bool
-}
+type cfg struct{}
 
-func run(args []string) error {
+func mainErr(args []string) error {
 	var cfg cfg
-	// [flag.FlagSet] is needed to avoid messing with flags added by package testing.
-	fs := flag.NewFlagSet("govulnfilter", flag.ExitOnError)
-	fs.BoolVar(&cfg.version, "version", false, "Print the govulnfilter version.")
-	fs.Usage = func() {
-		fmt.Fprint(os.Stderr, header)
-		fs.PrintDefaults()
-		fmt.Fprint(os.Stderr, footer)
+	cli, err := clim.NewTop("govulnfilter", "ignore temporarily a govulncheck vulnerability")
+	if err != nil {
+		return err
+	}
+	cli.SetExamples(examples)
+
+	initCmd, err := newInitCmd(cli, "init", "Create the .govulnfilter.json configuration file")
+	if err != nil {
+		return err
 	}
 
-	fs.Parse(args)
-	if cfg.version {
+	_, err = clim.NewSub(cli, "version", "Print the govulnfilter version")
+	if err != nil {
+		return err
+	}
+
+	command, err := cli.Parse(args)
+	if err != nil {
+		if errors.Is(err, clim.ErrHelp) {
+			fmt.Fprintln(os.Stderr, err)
+			return nil
+		}
+		return err
+	}
+	switch command {
+	case "govulnfilter init":
+		return initCmd.Run(cfg)
+	case "govulnfilter version":
 		fmt.Fprintln(os.Stderr, version())
 		return nil
+	default:
+		return fmt.Errorf("internal error: unwired command: %s", command)
 	}
-	if true {
-		return fmt.Errorf("ciccio")
-	}
-	return nil
 }
 
 func version() string {

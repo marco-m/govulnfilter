@@ -1,3 +1,9 @@
+github.com/google/go-cmp v0.6.0 h1:ofyhxvXcZhMsU5ulbFiLKl/XBFqE1GSq7atu8tAmTRI=
+github.com/google/go-cmp v0.6.0/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/marco-m/clim v0.2.0 h1:NdrAOWN66G/laJNXAFnw6j7Qxz8uEDyIVJQUmpNzeHc=
+github.com/marco-m/clim v0.2.0/go.mod h1:Xf7GvymdZEoC1wnAuLpPE8Wn2Ot/vxQkH98WYsR+jFs=
+github.com/marco-m/rosina v0.0.4 h1:3UDsbUbH14oMBeRNNEGr10XGVlOyfLI1fHL5I5DlofU=
+github.com/marco-m/rosina v0.0.4/go.mod h1:XnMWRFIR8GztNE0mRL7b3B+E6r7cL5bpq48TRmtDmjw=
 github.com/rogpeppe/go-internal v1.16.0 h1:O9DK+vNMDVGLr2BeZqmpLeMjiMNkuXfcqntWbZV6S5g=
 github.com/rogpeppe/go-internal v1.16.0/go.mod h1:DrUVZyrJU+txYW5/1kwtXQSMFio52ZOxX7yM1VHvnxs=
 golang.org/x/sys v0.26.0 h1:KHjCJyddX0LoSTb3J+vWpupP9p0oznkqVk/IfjymZbo=
