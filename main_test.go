@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
+	"os"
 	"testing"
 	"time"
 
+	"github.com/marco-m/govulnfilter/fake"
 	"github.com/rogpeppe/go-internal/testscript"
 )
 
@@ -14,6 +17,12 @@ func TestMain(m *testing.M) {
 	}
 	testscript.Main(m, map[string]func(){
 		"govulnfilter": main,
+		"fake": func() {
+			if err := fake.Main(os.Args[1:]); err != nil {
+				fmt.Fprintln(os.Stderr, "fake:", err)
+				os.Exit(1)
+			}
+		},
 	})
 }
 

@@ -1,0 +1,27 @@
+#
+# => fake can cat a file to stdout
+exec fake -stdout fruits.text
+! stderr .
+cmp stdout fruits.text
+
+# => fake can cat a file to stderr
+exec fake -stderr fruits.text
+! stdout .
+cmp stderr fruits.text
+
+# => fake asked to cat but no file found
+! exec fake -stdout non-existing.text
+! stdout .
+stderr 'fake: open non-existing.text: no such file or directory'
+
+# => fake cat to stdout and stderr
+exec fake -stdout fruits.text -stderr sausages.text
+cmp stdout fruits.text
+cmp stderr sausages.text
+
+-- fruits.text --
+banana
+mango
+-- sausages.text --
+finocchiona
+culatello
