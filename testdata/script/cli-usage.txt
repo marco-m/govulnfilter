@@ -25,12 +25,13 @@ Examples:
  Create the .govulnfilter.json configuration file.
  Then, edit it accordingly.
 
- $ govulnfilter run ./...
+ $ govulnfilter run govulncheck ./...
  Invoke govulncheck to scan the current module. Normally this is all you need.
 
 Commands:
 
  init        Create the .govulnfilter.json configuration file
+ run         Invoke govulncheck to scan the current module
  version     Print the govulnfilter version
 
 Options:

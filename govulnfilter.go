@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"runtime/debug"
 	"time"
 
@@ -15,7 +16,7 @@ $ govulnfilter init
 Create the .govulnfilter.json configuration file.
 Then, edit it accordingly.
 
-$ govulnfilter run ./...
+$ govulnfilter run govulncheck ./...
 Invoke govulncheck to scan the current module. Normally this is all you need.
 `
 
@@ -45,8 +46,12 @@ var timeNowFn = time.Now
 
 func main() {
 	if err := mainErr(os.Args[1:]); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+		fmt.Fprintln(os.Stderr, "govulnfilter:", err)
+		code := 1
+		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
+			code = exitErr.ExitCode()
+		}
+		os.Exit(code)
 	}
 }
 
@@ -61,6 +66,11 @@ func mainErr(args []string) error {
 	cli.SetExamples(examples)
 
 	initCmd, err := newInitCmd(cli, "init", "Create the .govulnfilter.json configuration file")
+	if err != nil {
+		return err
+	}
+
+	runCmd, err := newRunCmd(cli, "run", "Invoke govulncheck to scan the current module")
 	if err != nil {
 		return err
 	}
@@ -81,6 +91,8 @@ func mainErr(args []string) error {
 	switch command {
 	case "govulnfilter init":
 		return initCmd.Run(cfg)
+	case "govulnfilter run":
+		return runCmd.Run(cfg)
 	case "govulnfilter version":
 		fmt.Fprintln(os.Stderr, version())
 		return nil

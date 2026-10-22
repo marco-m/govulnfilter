@@ -1,0 +1,44 @@
+#
+# => run with no vulnerabilities
+exec govulnfilter run fake -stdout no-vulnerabilities.text
+stdout 'No vulnerabilities found'
+stdout 'govulnfilter: fake did not find any vulnerability'
+! stderr .
+
+# => format is probably plain text but not recognized
+! exec govulnfilter run fake -cat unknown-format.text
+cmp stdout unknown-format.text
+stderr 'govulnfilter: could not parse the output from fake'
+! stderr 'govulnfilter: output seems JSON'
+
+# => run with '-format json' is NOT supported
+exec govulnfilter run fake -cat output.json
+stdout 'WRITEME'
+stderr 'govulnfilter: could not parse the output from fake'
+stderr 'govulnfilter: output seems JSON, but govulnfilter can only parse plain text'
+
+# => run with unexpected vulnerabilities
+#exec WRITEME
+
+# => run with expected vulnerabilities, delay not expired
+#exec WRITEME
+
+# => run with expected vulnerabilities, delay expired
+#exec WRITEME
+
+-- no-vulnerabilities.text --
+No vulnerabilities found.
+
+-- output.json --
+{
+  "config": {
+    "protocol_version": "v1.0.0",
+    "scanner_name": "govulncheck",
+    "scanner_version": "v1.9.0",
+    "db": "https://vuln.go.dev",
+    "db_last_modified": "2026-10-27T21:16:18Z",
+    "go_version": "go1.27.3",
+    "scan_level": "symbol",
+    "scan_mode": "source"
+  }
+}

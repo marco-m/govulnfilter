@@ -1,0 +1,45 @@
+# => run cannot find subprocess.
+! exec govulnfilter run non-existing
+! stdout .
+stderr 'govulnfilter: exec: "non-existing": executable file not found in \$PATH'
+
+# => run missing argument <govulncheck>
+! exec govulnfilter run
+! stdout .
+stderr 'govulnfilter: run: missing <govulncheck>'
+
+# => run exits with the same status of subprocess (unfortunately in testscript
+#    we can only check that the exit status is non zero).
+! exec govulnfilter run fake -exit 42
+! stdout .
+stderr 'govulnfilter: fake: exit status 42'
+
+# => run debug mode stdout and stderr of subprocess
+exec govulnfilter run -debug fake -stdout fruits.text -stderr sausages.text
+cmp stdout fruits-stdout.text
+cmp stderr sausages-stderr.text
+
+# => run hooks stdout and stderr of govulncheck and exits with the same status
+! exec govulnfilter run govulncheck
+! stdout .
+stderr 'govulncheck: no package patterns provided'
+stderr 'govulnfilter: govulncheck: exit status 2'
+
+# => missing go.mod
+! exec govulnfilter run govulncheck ./...
+! stdout .
+stderr 'govulncheck: no go\.mod file'
+stderr 'govulnfilter: govulncheck: exit status 1'
+
+-- fruits.text --
+banana
+mango
+-- fruits-stdout.text --
+out> banana
+out> mango
+-- sausages.text --
+finocchiona
+culatello
+-- sausages-stderr.text --
+err> finocchiona
+err> culatello

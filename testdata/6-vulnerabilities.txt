@@ -1,0 +1,158 @@
+=== Symbol Results ===
+
+Vulnerability #1: GO-2026-6617
+    HTTP/2 server crash due to HPACK encoder race in net/http
+  More info: https://pkg.go.dev/vuln/GO-2026-6617
+  Module: golang.org/x/net
+    Found in: golang.org/x/net@v0.59.0
+    Fixed in: golang.org/x/net@v0.60.0
+    Example traces found:
+      #1: cert/vault_client.go:62:27: cert.vaultClient.Get calls api.DefaultConfig, which calls http2.ConfigureTransport
+      #2: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.ConnectionError.Error
+      #3: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.ErrCode.String
+      #4: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameHeader.String
+      #5: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameType.String
+      #6: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrame
+      #7: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameForHeader
+      #8: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameHeader
+      #9: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteContinuation
+      #10: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteGoAway
+      #11: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteHeaders
+      #12: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WritePing
+      #13: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteRSTStream
+      #14: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettings
+      #15: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettingsAck
+      #16: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteWindowUpdate
+      #17: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.SettingID.String
+      #18: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.SettingsFrame.ForeachSetting
+      #19: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.StreamError.Error
+      #20: proxy/http_proxy.go:230:13: proxy.HTTPProxy.ServeHTTP calls httputil.ReverseProxy.ServeHTTP, which eventually calls http2.Transport.RoundTrip
+      #21: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.connError.Error
+      #22: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.duplicatePseudoHeaderError.Error
+      #23: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldNameError.Error
+      #24: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldValueError.Error
+      #25: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.pseudoHeaderError.Error
+
+Vulnerability #2: GO-2026-6612
+    Double flow control refund on HTTP/2 server streams in net/http
+  More info: https://pkg.go.dev/vuln/GO-2026-6612
+  Module: golang.org/x/net
+    Found in: golang.org/x/net@v0.59.0
+    Fixed in: golang.org/x/net@v0.60.0
+    Example traces found:
+      #1: cert/vault_client.go:62:27: cert.vaultClient.Get calls api.DefaultConfig, which calls http2.ConfigureTransport
+      #2: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.ConnectionError.Error
+      #3: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.ErrCode.String
+      #4: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameHeader.String
+      #5: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameType.String
+      #6: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrame
+      #7: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameForHeader
+      #8: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameHeader
+      #9: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteContinuation
+      #10: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteGoAway
+      #11: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteHeaders
+      #12: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WritePing
+      #13: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteRSTStream
+      #14: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettings
+      #15: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettingsAck
+      #16: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteWindowUpdate
+      #17: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.SettingID.String
+      #18: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.SettingsFrame.ForeachSetting
+      #19: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.StreamError.Error
+      #20: proxy/http_proxy.go:230:13: proxy.HTTPProxy.ServeHTTP calls httputil.ReverseProxy.ServeHTTP, which eventually calls http2.Transport.RoundTrip
+      #21: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.connError.Error
+      #22: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.duplicatePseudoHeaderError.Error
+      #23: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldNameError.Error
+      #24: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldValueError.Error
+      #25: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.pseudoHeaderError.Error
+
+Vulnerability #3: GO-2026-6611
+    Excessive CPU consumption from repeated initial window changes in net/http
+  More info: https://pkg.go.dev/vuln/GO-2026-6611
+  Module: golang.org/x/net
+    Found in: golang.org/x/net@v0.59.0
+    Fixed in: golang.org/x/net@v0.60.0
+    Example traces found:
+      #1: cert/vault_client.go:62:27: cert.vaultClient.Get calls api.DefaultConfig, which calls http2.ConfigureTransport
+      #2: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.ConnectionError.Error
+      #3: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.ErrCode.String
+      #4: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameHeader.String
+      #5: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameType.String
+      #6: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrame
+      #7: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameForHeader
+      #8: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameHeader
+      #9: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteContinuation
+      #10: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteGoAway
+      #11: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteHeaders
+      #12: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WritePing
+      #13: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteRSTStream
+      #14: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettings
+      #15: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettingsAck
+      #16: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteWindowUpdate
+      #17: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.SettingID.String
+      #18: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.SettingsFrame.ForeachSetting
+      #19: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.StreamError.Error
+      #20: proxy/http_proxy.go:230:13: proxy.HTTPProxy.ServeHTTP calls httputil.ReverseProxy.ServeHTTP, which eventually calls http2.Transport.RoundTrip
+      #21: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.connError.Error
+      #22: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.duplicatePseudoHeaderError.Error
+      #23: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldNameError.Error
+      #24: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldValueError.Error
+      #25: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.pseudoHeaderError.Error
+
+Vulnerability #4: GO-2026-6610
+    HTTP/2 transport accepts malformed framing-related headers in net/http
+  More info: https://pkg.go.dev/vuln/GO-2026-6610
+  Module: golang.org/x/net
+    Found in: golang.org/x/net@v0.59.0
+    Fixed in: golang.org/x/net@v0.60.0
+    Example traces found:
+      #1: proxy/http_proxy.go:230:13: proxy.HTTPProxy.ServeHTTP calls httputil.ReverseProxy.ServeHTTP, which eventually calls http2.Transport.RoundTrip
+
+Vulnerability #5: GO-2026-6603
+    HTTP/2 server memory exhaustion due to Trailer headers in net/http
+  More info: https://pkg.go.dev/vuln/GO-2026-6603
+  Module: golang.org/x/net
+    Found in: golang.org/x/net@v0.59.0
+    Fixed in: golang.org/x/net@v0.60.0
+    Example traces found:
+      #1: cert/vault_client.go:62:27: cert.vaultClient.Get calls api.DefaultConfig, which calls http2.ConfigureTransport
+      #2: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.ConnectionError.Error
+      #3: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.ErrCode.String
+      #4: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameHeader.String
+      #5: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.FrameType.String
+      #6: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrame
+      #7: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameForHeader
+      #8: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.ReadFrameHeader
+      #9: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteContinuation
+      #10: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteGoAway
+      #11: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteHeaders
+      #12: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WritePing
+      #13: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteRSTStream
+      #14: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettings
+      #15: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteSettingsAck
+      #16: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.Framer.WriteWindowUpdate
+      #17: admin/api/routes.go:33:15: api.RoutesHandler.ServeHTTP calls fmt.Fprintln, which eventually calls http2.SettingID.String
+      #18: proxy/grpc_handler.go:44:23: proxy.gRPCServer.Serve calls grpc.Server.Serve, which eventually calls http2.SettingsFrame.ForeachSetting
+      #19: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.StreamError.Error
+      #20: proxy/http_proxy.go:230:13: proxy.HTTPProxy.ServeHTTP calls httputil.ReverseProxy.ServeHTTP, which eventually calls http2.Transport.RoundTrip
+      #21: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.connError.Error
+      #22: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.duplicatePseudoHeaderError.Error
+      #23: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldNameError.Error
+      #24: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.headerFieldValueError.Error
+      #25: cert/vault_client.go:51:37: cert.vaultClient.Get calls http2.pseudoHeaderError.Error
+
+Vulnerability #6: GO-2026-4736
+    GoBGP vulnerable to a denial of service via the NEXT_HOP path attribute in
+    github.com/osrg/gobgp
+  More info: https://pkg.go.dev/vuln/GO-2026-4736
+  Module: github.com/osrg/gobgp/v4
+    Found in: github.com/osrg/gobgp/v4@v4.8.0
+    Fixed in: N/A
+    Example traces found:
+      #1: bgp/bgp_nonwindows.go:117:2: bgp.BGPHandler.Start calls server.BgpServer.Serve, which eventually calls server.fsmHandler.recvMessageloop
+
+Your code is affected by 6 vulnerabilities from 2 modules.
+This scan also found 0 vulnerabilities in packages you import and 1
+vulnerability in modules you require, but your code doesn't appear to call these
+vulnerabilities.
+Use '-show verbose' for more details.
