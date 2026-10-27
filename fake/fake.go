@@ -23,7 +23,7 @@ func Main(args []string) error {
 		return err
 	}
 
-	cli.AddFlags(
+	if err := cli.AddFlags(
 		&clim.Flag{
 			Value: clim.Int(&cfg.ExitStatus, 0),
 			Long:  "exit", Help: "The exit status"},
@@ -33,9 +33,13 @@ func Main(args []string) error {
 		&clim.Flag{
 			Value: clim.String(&cfg.Stderr, ""),
 			Long:  "stderr", Help: "File to print to stderr"},
-	)
+	); err != nil {
+		return err
+	}
 	var posArgs []string
-	cli.AddPosArgs(&posArgs)
+	if err := cli.AddPosArgs(&posArgs); err != nil {
+		return err
+	}
 
 	_, err = cli.Parse(args)
 	if err != nil {
@@ -74,7 +78,7 @@ func cat(out io.Writer, path string) error {
 	if err != nil {
 		return err
 	}
-	defer fi.Close()
+	defer fi.Close() // nolint: errcheck
 	_, err = io.Copy(out, fi)
 	if err != nil {
 		return err

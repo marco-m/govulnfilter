@@ -21,7 +21,7 @@ stderr 'init: configuration file already exists: .+\.govulnfilter\.json'
         {
             "osv": "GO-2026-4736",
             "summary": "Optional, should come from govulncheck output",
-            "expiration": "2026-11-20T00:00:00+01:00",
+            "expiration": "2026-11-20T00:00:00Z",
             "reason": "Reason for delaying this vulnerability"
         }
     ]

@@ -1,0 +1,31 @@
+# See https://docs.github.com/en/actions/reference/
+
+on: [push]
+
+name: main
+
+env:
+  # WARNING When you update the Go version, update also golangci-version to the latest version.
+  # Failing to do so can cause the linter to report false positives.
+  go-version: 1.27.x
+  golangci-version: v2.15.0
+
+jobs:
+  all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # ratchet:actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # ratchet:actions/setup-go@v7
+        with:
+          go-version: ${{ env.go-version }}
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a # ratchet:golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.golangci-version }}
+      - run: go install golang.org/x/vuln/cmd/govulncheck@latest
+      - run: go test ./...
+      - run: go build ./...

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -17,13 +18,13 @@ func newInitCmd(parent *clim.CLI, name, oneline string) (*initCmd, error) {
 	return &initCmd{}, err
 }
 
-func (cmd *initCmd) Run(cfg cfg) error {
+func (cmd *initCmd) Run(cfg cfg) (err error) {
 	path, err := filepath.Abs(kFileName)
 	if err != nil {
 		return fmt.Errorf("init: determining file path: %s", err)
 	}
 	if fi, err := os.Open(path); err == nil {
-		fi.Close()
+		_ = fi.Close()
 		return fmt.Errorf("init: configuration file already exists: %s", path)
 	}
 
@@ -31,7 +32,7 @@ func (cmd *initCmd) Run(cfg cfg) error {
 	if err != nil {
 		return fmt.Errorf("init: creating file: %s", err)
 	}
-	defer fi.Close()
+	defer func() { err = errors.Join(err, fi.Close()) }()
 
 	truncateToStartOfDay := func(t time.Time) time.Time {
 		return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, t.Location())

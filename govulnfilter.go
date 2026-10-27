@@ -42,7 +42,7 @@ type Delay struct {
 var Version string
 
 // Escape hatch for testing.
-var timeNowFn = time.Now
+var timeNowFn func() time.Time = time.Now
 
 func main() {
 	if err := mainErr(os.Args[1:]); err != nil {

@@ -174,5 +174,5 @@ func openFile(t *testing.T, inPath string) (rd io.Reader, cleanup func()) {
 	t.Helper()
 	fi, err := os.Open(inPath)
 	assert.NoError(t, err, "openFile")
-	return fi, func() { fi.Close() }
+	return fi, func() { assert.NoError(t, fi.Close(), "openFile") }
 }

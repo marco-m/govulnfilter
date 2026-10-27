@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json/jsontext"
 	"encoding/json/v2"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -44,7 +45,7 @@ func newParseCmd(parent *clim.CLI, name, oneline string) (*parseCmd, error) {
 	return &parseCmd, nil
 }
 
-func (cmd *parseCmd) Run(cfg cfg) error {
+func (cmd *parseCmd) Run(cfg cfg) (err error) {
 	if clim.CountTrue(cmd.Dump, cmd.Verbose) > 1 {
 		return clim.NewParseError("parse: flags -dump -verbose are mutually exclusive")
 	}
@@ -59,7 +60,7 @@ func (cmd *parseCmd) Run(cfg cfg) error {
 	if err != nil {
 		return fmt.Errorf("parse: %s", err)
 	}
-	defer fi.Close()
+	defer func() { err = errors.Join(err, fi.Close()) }()
 	osvEntries, findings, err := Parse(fi)
 	if err != nil {
 		return fmt.Errorf("parse: %s", err)
@@ -123,7 +124,6 @@ func printCommon(findings []govulncheck.Finding, osvEntries map[string]osv.Entry
 		fmt.Println(osvToString(osvEntries[fnd.OSV], fnd))
 		fmt.Println()
 	}
-	return
 }
 
 func printHeader(verbose bool) error {
