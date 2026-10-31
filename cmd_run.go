@@ -51,7 +51,7 @@ Invoke govulncheck to scan the current module.
 
 func (cmd *runCmd) Run(cfg cfg) error {
 	if len(cmd.Args) == 0 {
-		return fmt.Errorf("%s%w", "run: missing <govulncheck>", clim.ErrParse)
+		return clim.NewParseError("run: missing <govulncheck>")
 	}
 	command := exec.Command(cmd.Args[0], cmd.Args[1:]...)
 

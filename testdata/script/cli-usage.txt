@@ -32,6 +32,7 @@ Commands:
 
  init        Create the .govulnfilter.json configuration file
  run         Invoke govulncheck to scan the current module
+ parse       Parse the JSON output of a previous govulncheck run
  version     Print the govulnfilter version
 
 Options:

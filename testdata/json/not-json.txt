@@ -1,0 +1,17 @@
+=== Symbol Results ===
+
+Vulnerability #1: GO-2026-4736
+    GoBGP vulnerable to a denial of service via the NEXT_HOP path attribute in
+    github.com/osrg/gobgp
+  More info: https://pkg.go.dev/vuln/GO-2026-4736
+  Module: github.com/osrg/gobgp/v4
+    Found in: github.com/osrg/gobgp/v4@v4.8.0
+    Fixed in: N/A
+    Example traces found:
+      #1: bgp/bgp_nonwindows.go:117:2: bgp.BGPHandler.Start calls server.BgpServer.Serve, which eventually calls server.fsmHandler.recvMessageloop
+
+Your code is affected by 1 vulnerability from 1 module.
+This scan also found 0 vulnerabilities in packages you import and 3
+vulnerabilities in modules you require, but your code doesn't appear to call
+these vulnerabilities.
+Use '-show verbose' for more details.

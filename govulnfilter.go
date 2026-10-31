@@ -74,6 +74,10 @@ func mainErr(args []string) error {
 	if err != nil {
 		return err
 	}
+	parseCmd, err := newParseCmd(cli, "parse", "Parse the JSON output of a previous govulncheck run")
+	if err != nil {
+		return err
+	}
 
 	_, err = clim.NewSub(cli, "version", "Print the govulnfilter version")
 	if err != nil {
@@ -93,6 +97,8 @@ func mainErr(args []string) error {
 		return initCmd.Run(cfg)
 	case "govulnfilter run":
 		return runCmd.Run(cfg)
+	case "govulnfilter parse":
+		return parseCmd.Run(cfg)
 	case "govulnfilter version":
 		fmt.Fprintln(os.Stderr, version())
 		return nil
